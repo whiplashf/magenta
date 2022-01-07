@@ -37,9 +37,10 @@ matplotlib.use('Agg')
 
 
 FLAGS = tf.app.flags.FLAGS
-tf.app.flags.DEFINE_string('output_dir', '',
+tf.app.flags.DEFINE_string('output_dir', 'F:\\郭雪飞共享文件\\magenta环境+结果\\',  # 结果输出路径
                            'Directory where the model will save its'
                            'compositions and checkpoints (midi files)')
+
 tf.app.flags.DEFINE_string('note_rnn_checkpoint_dir', '',
                            'Path to directory holding checkpoints for note rnn'
                            'melody prediction models. These will be loaded into'
