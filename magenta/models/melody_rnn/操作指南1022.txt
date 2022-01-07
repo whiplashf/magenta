@@ -1,0 +1,9 @@
+1. 命令行切换到 e:
+2. cd E:\Github-Desktop\magenta\magenta\models\melody_rnn
+3. activate music (有magenta库)
+4. 使用训练好的basic rnn生成10首音乐，存放在music文件夹
+melody_rnn_generate --config='basic_rnn' --bundle_file=basic_rnn.mag --output_dir=music --num_outputs=10 --num_steps=256 --primer_melody="[60]"
+
+
+
+
