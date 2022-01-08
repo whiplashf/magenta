@@ -166,7 +166,17 @@ class NoteRNNLoader(object):
                 # TODO(lukaszkaiser): investigate the problem here and remove this hack.
                 pass
             elif self.note_rnn_type == 'basic_rnn':
-                var_dict[inner_name] = var
+                if inner_name == 'rnn/multi_rnn_cell/cell_0/basic_lstm_cell/bias':
+                    var_dict['RNN/MultiRNNCell/Cell0/BasicLSTMCell/Linear/Bias'] = var  # 把图里的name改成checkpoint里的name
+                elif inner_name == 'rnn/multi_rnn_cell/cell_0/basic_lstm_cell/kernel':
+                    var_dict['RNN/MultiRNNCell/Cell0/BasicLSTMCell/Linear/Matrix'] = var
+                elif inner_name == 'rnn/multi_rnn_cell/cell_1/basic_lstm_cell/bias':
+                    var_dict['RNN/MultiRNNCell/Cell1/BasicLSTMCell/Linear/Bias'] = var
+                elif inner_name == 'rnn/multi_rnn_cell/cell_1/basic_lstm_cell/kernel':
+                    var_dict['RNN/MultiRNNCell/Cell1/BasicLSTMCell/Linear/Matrix'] = var
+                else:
+                    var_dict[inner_name] = var
+
             else:
                 # 修复名称不匹配问题
                 if inner_name == 'rnn/multi_rnn_cell/cell_0/lstm_cell/bias':

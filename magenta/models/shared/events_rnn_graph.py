@@ -47,11 +47,11 @@ def make_rnn_cell(rnn_layer_sizes,
   """
   cells = []
   for i in range(len(rnn_layer_sizes)):
-    cell = base_cell(rnn_layer_sizes[i])
+    cell = base_cell(rnn_layer_sizes[i], state_is_tuple=False)  # add
     if attn_length and not cells:
       # Add attention wrapper to first layer.
       cell = contrib_rnn.AttentionCellWrapper(
-          cell, attn_length, state_is_tuple=True)
+          cell, attn_length, state_is_tuple=False)  # true
     if residual_connections:
       cell = rnn.ResidualWrapper(cell)
       if i == 0 or rnn_layer_sizes[i] != rnn_layer_sizes[i - 1]:
@@ -60,7 +60,7 @@ def make_rnn_cell(rnn_layer_sizes,
         cell, output_keep_prob=dropout_keep_prob)
     cells.append(cell)
 
-  cell = rnn.MultiRNNCell(cells)
+  cell = rnn.MultiRNNCell(cells, state_is_tuple=False)  # add
 
   return cell
 

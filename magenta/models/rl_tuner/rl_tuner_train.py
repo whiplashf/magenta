@@ -41,18 +41,21 @@ tf.app.flags.DEFINE_string('output_dir', 'F:\\郭雪飞共享文件\\magenta环�
                            'Directory where the model will save its'
                            'compositions and checkpoints (midi files)')
 
-tf.app.flags.DEFINE_string('note_rnn_checkpoint_dir', '',
+tf.app.flags.DEFINE_string('note_rnn_checkpoint_dir', '.\\',
                            'Path to directory holding checkpoints for note rnn'
                            'melody prediction models. These will be loaded into'
                            'the NoteRNNLoader class object. The directory '
                            'should contain a train subdirectory')
-tf.app.flags.DEFINE_string('note_rnn_checkpoint_name', 'note_rnn.ckpt',
+
+tf.app.flags.DEFINE_string('note_rnn_checkpoint_name', 'basic_rnn.ckpt',
                            'Filename of a checkpoint within the '
                            'note_rnn_checkpoint_dir directory.')
-tf.app.flags.DEFINE_string('note_rnn_type', 'default',
+
+tf.app.flags.DEFINE_string('note_rnn_type', 'basic_rnn',
                            'If `default`, will use the basic LSTM described in '
                            'the research paper. If `basic_rnn`, will assume '
                            'the checkpoint is from a Magenta basic_rnn model.')
+
 tf.app.flags.DEFINE_string('midi_primer', './testdata/primer.mid',
                            'A midi file that can be used to prime the model')
 tf.app.flags.DEFINE_integer('training_steps', 1000000,
