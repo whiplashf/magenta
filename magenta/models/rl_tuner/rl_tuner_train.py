@@ -19,11 +19,18 @@ python magenta/models/rl_tuner/rl_tuner_train.py \
 --note_rnn_checkpoint_dir 'path' --midi_primer 'primer.mid' \
 --training_data_path 'path.tfrecord'
 """
+import sys
+sys.path.append('E:\\Github\\magenta')
+print(sys.path)
+
 import os
 
 from magenta.contrib import training as contrib_training
 from magenta.models.rl_tuner import rl_tuner
 from magenta.models.rl_tuner import rl_tuner_ops
+# import rl_tuner_ops
+# import rl_tuner
+
 import matplotlib
 import matplotlib.pyplot as plt  # pylint: disable=unused-import
 import tensorflow.compat.v1 as tf
@@ -37,30 +44,30 @@ matplotlib.use('Agg')
 
 
 FLAGS = tf.app.flags.FLAGS
-tf.app.flags.DEFINE_string('output_dir', 'F:\\郭雪飞共享文件\\magenta环境+结果\\',  # 结果输出路径
+tf.app.flags.DEFINE_string('output_dir', 'E:\\Github\\magenta\\magenta\\models\\rl_tuner\\out',  # 结果输出路径
                            'Directory where the model will save its'
                            'compositions and checkpoints (midi files)')
 
-tf.app.flags.DEFINE_string('note_rnn_checkpoint_dir', '.\\',
+tf.app.flags.DEFINE_string('note_rnn_checkpoint_dir', '.\\checkpoint',
                            'Path to directory holding checkpoints for note rnn'
                            'melody prediction models. These will be loaded into'
                            'the NoteRNNLoader class object. The directory '
                            'should contain a train subdirectory')
 
-tf.app.flags.DEFINE_string('note_rnn_checkpoint_name', 'basic_rnn.ckpt',
+tf.app.flags.DEFINE_string('note_rnn_checkpoint_name', 'note_rnn.ckpt', #
                            'Filename of a checkpoint within the '
                            'note_rnn_checkpoint_dir directory.')
 
-tf.app.flags.DEFINE_string('note_rnn_type', 'basic_rnn',
+tf.app.flags.DEFINE_string('note_rnn_type', 'basic_rnn', #
                            'If `default`, will use the basic LSTM described in '
                            'the research paper. If `basic_rnn`, will assume '
                            'the checkpoint is from a Magenta basic_rnn model.')
 
 tf.app.flags.DEFINE_string('midi_primer', './testdata/primer.mid',
                            'A midi file that can be used to prime the model')
-tf.app.flags.DEFINE_integer('training_steps', 1000000,
+tf.app.flags.DEFINE_integer('training_steps', 10000,
                             'The number of steps used to train the model')
-tf.app.flags.DEFINE_integer('exploration_steps', 500000,
+tf.app.flags.DEFINE_integer('exploration_steps', 5000,
                             'The number of steps over which the models'
                             'probability of taking a random action (exploring)'
                             'will be annealed from 1.0 to its normal'
@@ -70,7 +77,7 @@ tf.app.flags.DEFINE_string('exploration_mode', 'boltzmann',
                            'Can be either egreedy for epsilon-greedy or '
                            'boltzmann, which will sample from the models'
                            'output distribution to select the next action')
-tf.app.flags.DEFINE_integer('output_every_nth', 50000,
+tf.app.flags.DEFINE_integer('output_every_nth', 500,
                             'The number of steps before the model will evaluate'
                             'itself and store a checkpoint')
 tf.app.flags.DEFINE_integer('num_notes_in_melody', 32,

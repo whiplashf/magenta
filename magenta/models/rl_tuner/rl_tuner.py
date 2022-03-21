@@ -28,6 +28,10 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import sys
+sys.path.append('E:\\Github\\magenta')
+print(sys.path)
+
 import collections
 import os
 import random
@@ -36,6 +40,10 @@ import urllib
 from magenta.models.rl_tuner import note_rnn_loader
 from magenta.models.rl_tuner import rl_tuner_eval_metrics
 from magenta.models.rl_tuner import rl_tuner_ops
+# import rl_tuner_ops
+# import note_rnn_loader
+# import rl_tuner_eval_metrics
+
 import matplotlib.pyplot as plt
 from note_seq import melodies_lib as mlib
 from note_seq import midi_io

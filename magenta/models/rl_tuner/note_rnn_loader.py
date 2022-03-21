@@ -30,13 +30,20 @@ piece of the overall graph.
 
 These functions are necessary for use with the RL Tuner class.
 """
+import sys
+sys.path.append('E:\\Github\\magenta')
+print(sys.path)
 
 import os
 
 from magenta.common import sequence_example_lib
 from magenta.models.rl_tuner import rl_tuner_ops
 from magenta.models.shared import events_rnn_graph
+# import rl_tuner_ops
+
 from magenta.pipelines import melody_pipelines
+# import melody_pipelines
+
 import note_seq
 from note_seq import midi_io
 from note_seq import sequences_lib
@@ -428,4 +435,5 @@ class NoteRNNLoader(object):
           List of variable names.
         """
         with self.graph.as_default():
+            print(tf.global_variables())
             return [v for v in tf.global_variables() if v.name.startswith(self.scope)]

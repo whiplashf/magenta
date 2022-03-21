@@ -28,7 +28,8 @@ import tensorflow.compat.v1 as tf
 LSTM_STATE_NAME = 'lstm'
 
 # Number of output note classes. This is a property of the dataset.
-NUM_CLASSES = 38
+# NUM_CLASSES = 38
+NUM_CLASSES = 256
 
 # Default batch size.
 BATCH_SIZE = 128
@@ -104,9 +105,10 @@ def basic_rnn_hparams():
     Hyperparameters of the downloadable basic_rnn pre-trained model.
   """
   # TODO(natashajaques): ability to restore basic_rnn from any .mag file.
+  # return contrib_training.HParams(
+  #     batch_size=128, rnn_layer_sizes=[512, 512], one_hot_length=NUM_CLASSES)
   return contrib_training.HParams(
-      batch_size=128, rnn_layer_sizes=[512, 512], one_hot_length=NUM_CLASSES)
-
+      batch_size=2, rnn_layer_sizes=[1024,1024,1024,1024, 1024, 1024], one_hot_length=NUM_CLASSES)
 
 def default_dqn_hparams():
   """Generates the default hparams for RLTuner DQN model."""
