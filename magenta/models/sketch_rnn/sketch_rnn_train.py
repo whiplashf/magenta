@@ -48,7 +48,7 @@ tf.app.flags.DEFINE_string(
     'hparams', '',
     'Pass in comma-separated key=value pairs such as '
     '\'save_every=40,decay_rate=0.99\' '
-    '(no whitespace) to be read into the HParams object defined in model.py')
+    '(no whitespace) to be read into the HParams object defined in model_transformer.py')
 
 PRETRAINED_MODELS_URL = ('http://download.magenta.tensorflow.org/models/'
                          'sketch_rnn.zip')

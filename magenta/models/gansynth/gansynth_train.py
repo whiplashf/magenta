@@ -24,7 +24,7 @@ To use a config of hyperparameters and manual hparams:
 >>> python magenta/models/gansynth/train.py --config=mel_prog_hires \
 >>> --hparams='{"train_data_path":"/path/to/nsynth-train.tfrecord"}'
 
-List of hyperparameters can be found in model.py.
+List of hyperparameters can be found in model_transformer.py.
 Trains in a couple days on a single V100 GPU.
 
 Adapted from the original Progressive GAN paper for images.

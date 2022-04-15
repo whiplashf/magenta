@@ -95,7 +95,7 @@ class RLTuner(object):
                  # Other music related settings.
                  num_notes_in_melody=32, # 一首歌的长度
                  input_size=rl_tuner_ops.NUM_CLASSES,
-                 num_actions=rl_tuner_ops.NUM_CLASSES,
+                 num_actions=rl_tuner_ops.NUM_CLASSES, # actions个数，即词典大小
                  midi_primer=None,
 
                  # Logistics.
@@ -249,12 +249,16 @@ class RLTuner(object):
 
     def initialize_internal_models_graph_session(self,
                                                  restore_from_checkpoint=True):
-        """Initializes internal RNN models, builds the graph, starts the session.
+        """
+        初始化RNN模型。通过在单独的函数中初始化，使模型可以继承该类，并定义不同的q网络
+
+        Initializes internal RNN models, builds the graph, starts the session.
 
         Adds the graphs of the internal RNN models to this graph, adds the DQN ops
         to the graph, and starts a new Saver and session. By having a separate
         function for this rather than doing it in the constructor, it allows a model
         inheriting from this class to define its q_network differently.
+
 
         Args:
           restore_from_checkpoint: If True, the weights for the 'q_network',
@@ -461,11 +465,13 @@ class RLTuner(object):
         with tf.name_scope('estimating_future_rewards'):
             # The target q network is used to estimate the value of the best action at
             # the state resulting from the current action.
+            # 停止梯度，不更新目标网络参数
             self.next_action_scores = tf.stop_gradient(self.target_q_network())
             tf.summary.histogram(
                 'target_action_scores', self.next_action_scores)
 
             # Rewards are observed from the environment and are fed in later.
+            # todo 啥时候写rewards?
             self.rewards = tf.placeholder(tf.float32, (None,), name='rewards')
 
             # Each algorithm is attempting to model future rewards with a different
@@ -489,6 +495,7 @@ class RLTuner(object):
 
             # Total rewards are the observed rewards plus discounted estimated future
             # rewards.
+            # 总奖励=当前奖励+未来奖励*折扣
             self.future_rewards = self.rewards + self.discount_rate * self.target_vals
 
         tf.logging.info('Adding q value prediction portion of graph')
@@ -659,7 +666,10 @@ class RLTuner(object):
 
     def action(self, observation, exploration_period=0, enable_random=True,
                sample_next_obs=False):
-        """Given an observation, runs the q_network to choose the current action.
+        """
+        给定一个状态，通过q网络选择当前动作。未进行反向传播。
+
+        Given an observation, runs the q_network to choose the current action.
 
         Does not backprop.
 
@@ -695,6 +705,8 @@ class RLTuner(object):
                                  (self.q_network.batch_size, 1, self.input_size))
         lengths = np.full(self.q_network.batch_size, 1, dtype=int)
 
+        # todo session是怎么run的？奖励值如何计算的？
+        # []中为要运行的函数，其返回值与()中一一对应；{}中为传入的形参
         (action, action_softmax, self.q_network.state_value,
          reward_scores, self.reward_rnn.state_value) = self.session.run(
             [self.predicted_actions, self.action_softmax,
@@ -707,18 +719,20 @@ class RLTuner(object):
              self.reward_rnn.initial_state: self.reward_rnn.state_value,
              self.reward_rnn.lengths: lengths})
 
+        # 转换成一维向量，每个action对应的奖励
         reward_scores = np.reshape(reward_scores, (self.num_actions))
+        # 转换成一维向量，每个action对应的发生概率
         action_softmax = np.reshape(action_softmax, (self.num_actions))
         action = np.reshape(action, (self.num_actions))
 
-        if enable_random and random.random() < exploration_p:
+        if enable_random and random.random() < exploration_p:  # 如果随机数小于探索概率，返回随机note
             note = self.get_random_note()
             return note, note, reward_scores
         else:
-            if not sample_next_obs:
+            if not sample_next_obs:  # 如果是最后一个音符，返回的observation为action
                 return action, action, reward_scores
             else:
-                obs_note = rl_tuner_ops.sample_softmax(action_softmax)
+                obs_note = rl_tuner_ops.sample_softmax(action_softmax)  # 根据action概率选择一个note
                 next_obs = np.array(
                     rl_tuner_ops.make_onehot([obs_note], self.num_actions)).flatten()
                 return action, next_obs, reward_scores

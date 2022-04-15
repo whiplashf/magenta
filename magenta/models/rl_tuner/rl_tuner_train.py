@@ -22,12 +22,14 @@ python magenta/models/rl_tuner/rl_tuner_train.py \
 import sys
 
 sys.path.append('E:\\Github\\magenta')
-print(sys.path)
+# print(sys.path)
 
 import os
 
 from magenta.contrib import training as contrib_training
-from magenta.models.rl_tuner import rl_tuner
+# from magenta.models.rl_tuner import rl_tuner
+from magenta.models.rl_tuner import rl_tuner_modify as rl_tuner
+
 from magenta.models.rl_tuner import rl_tuner_ops
 # import rl_tuner_ops
 # import rl_tuner
